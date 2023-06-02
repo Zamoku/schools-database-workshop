@@ -358,6 +358,37 @@ To run this function use this command `select *  from create_subject('Geography'
 ### Create these functions
 
 * Create a function called `add_teacher` that adds a new teacher and ensures that the `email` for the `teacher` is unique. If the email is not unique the teacher should not be added to the database and the function should return false.
+```sql
+create or replace function 
+	add_teacher (the_firstname text, the_lastname text, the_email text )
+	returns boolean as
+$$
+declare
+-- declare a variable to be used in the function
+total int;
+
+begin
+
+	-- run a query to check if the teachers' name exists
+	select into total count(*) from teacher 
+		where LOWER(email) = LOWER(the_email);
+
+	-- if total is 0 the teacher doesn't exist
+	if (total = 0) then
+		-- then create the teacher
+		insert into teacher (first_name, last_name, email) values (the_firstname);
+		-- and returns true if the teacher was created already
+		return true;
+	else
+		-- returns false if the teacher already exists
+		return false;
+	end if;
+
+end;
+$$
+Language plpgsql;
+
+```
 
 * Create a function called `link_teacher_to_subject` that links a teacher to a subject and ensures that a `teacher` is not linked to a subject more than once.
 
