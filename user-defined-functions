@@ -28,3 +28,33 @@ end;
 $$
 Language plpgsql;
 ```
+
+**Link Teacher to subject function**
+create or replace function 
+	link_teacher_to_subject (the_teacherId int, the_subjectId int)
+	returns boolean as
+$$
+declare
+-- declare a variable to be used in the function
+total int;
+
+begin
+
+	-- run a query to check if the teachers' name exists
+	select into total count(*) from teacher_subject
+		where (teacher_id) = (the_teacherId);
+
+	-- if total is 0 the teacher doesn't exist
+	if (total = 0) then
+		-- then create the teacher
+		insert into teacher_subject (teacher_id, subject_id) values (the_teacherId, the_subjectId );
+		-- and returns true if the subject is linked to a teacher
+		return true;
+	else
+		-- returns false if the teacher is already linked to a subject 
+		return false;
+	end if;
+
+end;
+$$
+Language plpgsql;
