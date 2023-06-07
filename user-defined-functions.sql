@@ -1,4 +1,3 @@
-```sql
 create or replace function 
 	add_teacher (the_firstname text, the_lastname text, the_email text )
 	returns boolean as
@@ -27,9 +26,9 @@ begin
 end;
 $$
 Language plpgsql;
-```
 
-**Link Teacher to subject function**
+------------------------------------------------------------------------------------------
+
 create or replace function 
 	link_teacher_to_subject (the_teacherId int, the_subjectId int)
 	returns boolean as
@@ -54,6 +53,33 @@ begin
 		-- returns false if the teacher is already linked to a subject 
 		return false;
 	end if;
+
+end;
+$$
+Language plpgsql;
+--------------------------------------------------------------------------------
+create or replace function 
+	find_teachers_for_subject (
+	
+	the_subject text
+	
+	)
+	
+	returns table (
+	
+	the_teacherForSubject text
+	
+	)as 
+$$
+
+begin
+
+	-- run a query to return the teachers' name
+	return query
+	select teacher.first_name from teacher_subject
+	 join teacher on teacher.id = teacher_subject.teacher_id
+	 join subject on subject.id = teacher_subject.subject_id
+		where LOWER(subject.name) = LOWER(the_subject);
 
 end;
 $$
