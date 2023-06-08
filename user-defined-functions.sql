@@ -84,3 +84,31 @@ begin
 end;
 $$
 Language plpgsql;
+----------------------------------------------------------------------
+create or replace function 
+	find_teachers_teaching_multiple_subjects (
+	
+	the_numberOfSubject int
+	
+	)
+	
+	returns table (
+	
+	the_teacherSubject text
+	
+	)as 
+$$
+
+begin
+
+
+	return query
+	select teacher.first_name from teacher_subject
+	 join teacher on teacher.id = teacher_subject.teacher_id
+	 join subject on subject.id = teacher_subject.subject_id
+		group by teacher.first_name
+		having count(teacher_subject.subject_id) = the_numberOfSubject;
+
+end;
+$$
+Language plpgsql;
