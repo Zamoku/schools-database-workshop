@@ -94,7 +94,7 @@ create or replace function
 	
 	returns table (
 	
-	the_teacherSubject text
+	the_teacher text
 	
 	)as 
 $$
